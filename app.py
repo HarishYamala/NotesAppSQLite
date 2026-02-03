@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, session, flash, url_for
 import sqlite3
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from email.message import EmailMessage
 import smtplib
@@ -11,16 +12,18 @@ app.secret_key = SECRET_KEY
 
 # Database Connection Helper(SQLite) 
 
-def get_db_connection():
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+def get_db_connection():
     """
-    Creates and Returns a SQLite database connection
-    row_factory allows column access using names like dict 
+    Creates and returns a SQLite database connection.
+    Uses absolute path so it works correctly on PythonAnywhere.
     """
-    conn=sqlite3.connect("notes.db")
+    conn = sqlite3.connect(os.path.join(BASE_DIR, "notes.db"))
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON;")
     return conn
+
 
 @app.route("/")
 def home():

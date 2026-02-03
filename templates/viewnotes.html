@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}All Notes{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="fw-semibold d-flex align-items-center gap-2">
+    🗂️ Your Notes
+  </h2>
+
+  <!-- Search box -->
+  <div class="input-group w-25">
+    <input
+      type="text"
+      id="searchInput"
+      class="form-control"
+      placeholder="Search notes..."
+      onkeyup="filterNotes()"
+    >
+    <span class="input-group-text bg-primary text-white">
+      🔍
+    </span>
+  </div>
+</div>
+
+<!-- WHITE PANEL -->
+<div class="card shadow-sm border-0 rounded-4 p-4">
+
+  <div class="row" id="notesContainer">
+    {% if notes %}
+      {% for note in notes %}
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-4 note-card">
+          <div class="card shadow-sm border-0 h-100 rounded-4 p-3">
+
+            <h5 class="fw-semibold note-title">
+              {{ note.title }}
+            </h5>
+
+            <p class="text-muted note-content">
+              {{ note.content[:120] }}{% if note.content|length > 120 %}...{% endif %}
+            </p>
+
+            <small class="text-muted d-flex align-items-center gap-1 mb-3">
+              🕒 {{ note.created_at }}
+            </small>
+
+            <div class="d-flex justify-content-between">
+              <a href="{{ url_for('view', note_id=note.id) }}"
+                 class="btn btn-sm btn-outline-primary">
+                👁 View
+              </a>
+
+              <a href="{{ url_for('update', note_id=note.id) }}"
+                 class="btn btn-sm btn-outline-warning">
+                ✏ Edit
+              </a>
+
+              <form action="{{ url_for('delete', note_id=note.id) }}"
+                    method="POST">
+                <button class="btn btn-sm btn-outline-danger"
+                        onclick="return confirm('Delete this note?')">
+                  🗑 Delete
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-muted">No notes found.</p>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

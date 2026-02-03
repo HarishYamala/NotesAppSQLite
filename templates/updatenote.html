@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Update Note{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow p-4">
+      <h4>Edit Note</h4>
+
+      <form method="POST">
+        <input name="title" class="form-control mb-2" value="{{ note.title }}" required>
+        <textarea name="content" class="form-control mb-3" rows="6" required>{{ note.content }}</textarea>
+        <button class="btn btn-warning">Update</button>
+        <a href="{{ url_for('viewall') }}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

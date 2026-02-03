@@ -1,0 +1,154 @@
+/* =====================
+   GLOBAL
+===================== */
+
+html.dark body {
+  background-color: #121212;
+  color: #eaeaea;
+}
+
+/* =====================
+   NAVBAR
+===================== */
+
+html.dark .navbar {
+  background-color: #1e1e1e !important;
+}
+
+/* =====================
+   CARDS
+===================== */
+
+html.dark .card {
+  background-color: #1f1f1f;
+  color: #eaeaea;
+  border: 1px solid #2a2a2a;
+}
+
+/* =====================
+   INPUTS & TEXTAREA
+===================== */
+
+html.dark input,
+html.dark textarea {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border-color: #444;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #bbb;
+}
+
+/* =====================
+   ALERTS
+===================== */
+
+html.dark .alert {
+  background-color: #1f2d1f;
+  color: #d4edda;
+  border-color: #2f4f2f;
+}
+
+/* =====================
+   BUTTONS
+===================== */
+
+html.dark .btn-outline-light {
+  color: #fff;
+  border-color: #aaa;
+}
+
+/* =====================
+   FOOTER
+===================== */
+
+html.dark footer {
+  background-color: #1e1e1e;
+  color: #aaa;
+}
+
+/* Optional fine tuning */
+[data-bs-theme="dark"] body {
+  background-color: #121212;
+}
+
+[data-bs-theme="dark"] .card {
+  background-color: #1e1e1e;
+  border-color: #333;
+}
+
+[data-bs-theme="dark"] footer {
+  background-color: #1e1e1e;
+}
+
+.card {
+  background-color: var(--bs-body-bg);
+}
+
+[data-bs-theme="dark"] .btn-outline-dark {
+  color: #fff;
+  border-color: #fff;
+}
+
+[data-bs-theme="dark"] .btn-outline-dark:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.card {
+  background-color: var(--bs-body-bg);
+}
+
+[data-bs-theme="dark"] .card {
+  background-color: #1e1e1e;
+}
+
+.note-card .card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.note-card .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+[data-bs-theme="dark"] .note-content {
+  color: #ccc;
+}
+
+
+.note-card {
+    min-height: 230px;
+    border-radius: 14px;
+    transition: all 0.25s ease;
+}
+
+.note-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+
+.note-card .card-title {
+    font-size: 1.1rem;
+}
+
+.note-card .card-text {
+    font-size: 0.95rem;
+    color: #555;
+}
+
+
+/* =====================
+   SMOOTH TRANSITION
+===================== */
+
+body,
+.card,
+.navbar,
+footer,
+input,
+textarea {
+  transition: all 0.25s ease;
+}

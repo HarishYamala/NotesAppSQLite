@@ -1,0 +1,12 @@
+# Database
+notes.db
+
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env

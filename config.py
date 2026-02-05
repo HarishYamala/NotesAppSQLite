@@ -9,5 +9,5 @@ MAIL_CONFIG = {
     "MAIL_USE_SSL": True,
     "MAIL_USERNAME": "harishyamala2002@gmail.com",
     "MAIL_PASSWORD": os.environ.get("MAIL_PASSWORD", "ftbchvsbsueojnzz"),
-    "BASE_URL": "http://127.0.0.1:5000"  # change after deployment
+    "BASE_URL": "https://xxxx.ngrok-free.app"  # change after deployment
 }

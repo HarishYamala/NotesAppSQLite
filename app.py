@@ -306,32 +306,39 @@ Flask Notes Team
 def reset(token):
     conn = get_db_connection()
 
-    # Check if token exists
     user = conn.execute(
         "SELECT id FROM users WHERE reset_token = ?",
         (token,)
     ).fetchone()
 
-    if user is None:
+    if not user:
         conn.close()
         flash("Invalid or expired reset link", "danger")
         return redirect(url_for("login"))
 
     if request.method == "POST":
-        password = generate_password_hash(request.form["password"])
+        password = request.form["password"]
+        confirm = request.form["confirm_password"]
+
+        if password != confirm:
+            flash("Passwords do not match", "danger")
+            return redirect(url_for("reset", token=token))
+
+        hashed_password = generate_password_hash(password)
 
         conn.execute(
             "UPDATE users SET password = ?, reset_token = NULL WHERE reset_token = ?",
-            (password, token)
+            (hashed_password, token)
         )
         conn.commit()
         conn.close()
 
-        flash("Password updated successfully", "success")
+        flash("Password updated successfully. Please login.", "success")
         return redirect(url_for("login"))
 
     conn.close()
-    return render_template("reset.html")
+    return render_template("reset.html", token=token)
+
 
 
 @app.route("/about")
@@ -343,4 +350,4 @@ def contact():
     return render_template("contact.html")
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=5000)

@@ -3,20 +3,28 @@
 {% block content %}
 
 <div class="row justify-content-center">
-  <div class="col-12 col-sm-10 col-md-6 col-lg-4 col-xl-3">
+  <div class="col-12 col-sm-10 col-md-6 col-lg-4">
 
     <div class="card shadow-sm p-4 rounded-4">
-      <h4 class="text-center mb-4 fw-semibold">
-        Reset Password
-      </h4>
+      <h4 class="text-center mb-4 fw-semibold">Reset Password</h4>
 
-      <form method="POST">
-        <div class="mb-4">
+      <form method="POST" action="{{ url_for('reset', token=token) }}">
+        <div class="mb-3">
           <input
             type="password"
             name="password"
             class="form-control"
-            placeholder="Enter new password"
+            placeholder="New password"
+            required
+          >
+        </div>
+
+        <div class="mb-4">
+          <input
+            type="password"
+            name="confirm_password"
+            class="form-control"
+            placeholder="Confirm password"
             required
           >
         </div>

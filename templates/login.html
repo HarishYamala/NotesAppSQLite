@@ -3,35 +3,87 @@
 {% block content %}
 
 <div class="row justify-content-center">
-  <div class="col-md-4">
-    <div class="card shadow p-4">
-      <h4 class="text-center mb-3">Login</h4>
+  <div class="col-12 col-sm-10 col-md-6 col-lg-4 col-xl-3">
+
+    <div class="card shadow-sm p-4 rounded-4">
+      <h4 class="text-center mb-4 fw-semibold">Login</h4>
 
       <form method="POST">
-        <input name="username" class="form-control mb-2" placeholder="Username" required>
-        <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
-        <button class="btn btn-primary w-100">Login</button>
+        <div class="mb-3">
+          <input
+            name="username"
+            class="form-control"
+            placeholder="Username"
+            required
+          >
+        </div>
+
+        <div class="mb-3">
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            placeholder="Password"
+            required
+          >
+        </div>
+
+        <button class="btn btn-primary w-100">
+          Login
+        </button>
       </form>
 
       <div class="text-center mt-3">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#forgotModal">Forgot password?</a>
+        <button
+          class="btn btn-link p-0"
+          data-bs-toggle="modal"
+          data-bs-target="#forgotModal"
+        >
+          Forgot password?
+        </button>
       </div>
 
-      <p class="text-center mt-2">
-        New user? <a href="{{ url_for('register') }}">Register</a>
+      <p class="text-center mt-3 mb-0 small">
+        New user?
+        <a href="{{ url_for('register') }}">Register</a>
       </p>
     </div>
+
   </div>
 </div>
 
 <!-- Forgot Password Modal -->
-<div class="modal fade" id="forgotModal">
-  <div class="modal-dialog">
-    <form method="POST" action="{{ url_for('forgot') }}" class="modal-content p-4">
-      <h5>Reset Password</h5>
-      <input type="email" name="email" class="form-control my-2" placeholder="Enter email" required>
-      <button class="btn btn-success">Send Reset Link</button>
-    </form>
+<div class="modal fade" id="forgotModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4">
+
+      <form method="POST" action="{{ url_for('forgot') }}">
+        <div class="modal-header">
+          <h5 class="modal-title">Reset Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="Enter your registered email"
+            required
+          >
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button class="btn btn-success">
+            Send Reset Link
+          </button>
+        </div>
+      </form>
+
+    </div>
   </div>
 </div>
 

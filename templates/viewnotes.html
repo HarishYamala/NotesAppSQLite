@@ -2,13 +2,16 @@
 {% block title %}All Notes{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h2 class="fw-semibold d-flex align-items-center gap-2">
+
+<!-- HEADER -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+
+  <h2 class="fw-semibold d-flex align-items-center gap-2 mb-0">
     🗂️ Your Notes
   </h2>
 
   <!-- Search box -->
-  <div class="input-group w-25">
+  <div class="input-group w-100 w-md-50 w-lg-25">
     <input
       type="text"
       id="searchInput"
@@ -20,22 +23,24 @@
       🔍
     </span>
   </div>
+
 </div>
 
-<!-- WHITE PANEL -->
-<div class="card shadow-sm border-0 rounded-4 p-4">
+<!-- NOTES PANEL -->
+<div class="card shadow-sm border-0 rounded-4 p-3 p-md-4">
 
-  <div class="row" id="notesContainer">
+  <div class="row g-3" id="notesContainer">
     {% if notes %}
       {% for note in notes %}
-        <div class="col-sm-6 col-md-4 col-lg-3 mb-4 note-card">
+
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 note-card">
           <div class="card shadow-sm border-0 h-100 rounded-4 p-3">
 
-            <h5 class="fw-semibold note-title">
+            <h5 class="fw-semibold note-title text-truncate">
               {{ note.title }}
             </h5>
 
-            <p class="text-muted note-content">
+            <p class="text-muted small note-content">
               {{ note.content[:120] }}{% if note.content|length > 120 %}...{% endif %}
             </p>
 
@@ -43,21 +48,30 @@
               🕒 {{ note.created_at }}
             </small>
 
-            <div class="d-flex justify-content-between">
-              <a href="{{ url_for('view', note_id=note.id) }}"
-                 class="btn btn-sm btn-outline-primary">
+            <div class="d-flex flex-wrap gap-2 mt-auto">
+              <a
+                href="{{ url_for('view', note_id=note.id) }}"
+                class="btn btn-sm btn-outline-primary flex-fill"
+              >
                 👁 View
               </a>
 
-              <a href="{{ url_for('update', note_id=note.id) }}"
-                 class="btn btn-sm btn-outline-warning">
+              <a
+                href="{{ url_for('update', note_id=note.id) }}"
+                class="btn btn-sm btn-outline-warning flex-fill"
+              >
                 ✏ Edit
               </a>
 
-              <form action="{{ url_for('delete', note_id=note.id) }}"
-                    method="POST">
-                <button class="btn btn-sm btn-outline-danger"
-                        onclick="return confirm('Delete this note?')">
+              <form
+                action="{{ url_for('delete', note_id=note.id) }}"
+                method="POST"
+                class="flex-fill"
+              >
+                <button
+                  class="btn btn-sm btn-outline-danger w-100"
+                  onclick="return confirm('Delete this note?')"
+                >
                   🗑 Delete
                 </button>
               </form>
@@ -65,11 +79,15 @@
 
           </div>
         </div>
+
       {% endfor %}
     {% else %}
-      <p class="text-muted">No notes found.</p>
+      <p class="text-muted">
+        No notes found.
+      </p>
     {% endif %}
   </div>
 
 </div>
+
 {% endblock %}

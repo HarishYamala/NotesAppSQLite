@@ -3,16 +3,32 @@
 {% block content %}
 
 <div class="row justify-content-center">
-  <div class="col-md-4">
-    <div class="card shadow p-4">
-      <h4>Reset Password</h4>
+  <div class="col-12 col-sm-10 col-md-6 col-lg-4 col-xl-3">
+
+    <div class="card shadow-sm p-4 rounded-4">
+      <h4 class="text-center mb-4 fw-semibold">
+        Reset Password
+      </h4>
 
       <form method="POST">
-        <input type="password" name="password" class="form-control mb-3" placeholder="New password" required>
-        <button class="btn btn-success w-100">Update Password</button>
+        <div class="mb-4">
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            placeholder="Enter new password"
+            required
+          >
+        </div>
+
+        <button class="btn btn-success w-100">
+          Update Password
+        </button>
       </form>
     </div>
+
   </div>
 </div>
 
 {% endblock %}
+

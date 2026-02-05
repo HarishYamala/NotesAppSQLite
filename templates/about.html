@@ -2,36 +2,40 @@
 {% block title %}About{% endblock %}
 
 {% block content %}
+
 <div class="row justify-content-center">
-  <div class="col-md-10 col-lg-8">
-    <div class="card shadow-lg border-0 rounded-4 p-5">
+  <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7">
+
+    <div class="card shadow-sm border-0 rounded-4 p-4 p-md-5">
 
       <h2 class="mb-4 fw-semibold text-center">
         About Flask Notes
       </h2>
 
-      <p class="fs-5">
+      <p class="fs-6 fs-md-5">
         <strong>Flask Notes</strong> is a simple, secure, and intuitive note
         management system built using <strong>Flask</strong> and
-        <strong>MySQL</strong>. It allows users to create, edit, delete, and
+        <strong>SQLite</strong>. It allows users to create, edit, delete, and
         manage personal notes in a clean and distraction-free interface.
       </p>
 
-      <p class="fs-5">
+      <p class="fs-6 fs-md-5">
         Whether you’re saving quick reminders or writing detailed thoughts,
         Flask Notes keeps your ideas safe, accessible, and beautifully
         organized — across both <strong>light</strong> and
         <strong>dark</strong> modes.
       </p>
 
-      <div class="mt-4 text-muted">
-        <span class="me-3">⚡ Fast</span>
-        <span class="me-3">🔐 Secure</span>
-        <span class="me-3">🌙 Dark Mode</span>
+      <div class="mt-4 d-flex flex-wrap gap-3 text-muted justify-content-center justify-content-md-start">
+        <span>⚡ Fast</span>
+        <span>🔐 Secure</span>
+        <span>🌙 Dark Mode</span>
         <span>☁️ Cloud Ready</span>
       </div>
 
     </div>
+
   </div>
 </div>
+
 {% endblock %}

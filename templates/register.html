@@ -3,22 +3,56 @@
 {% block content %}
 
 <div class="row justify-content-center">
-  <div class="col-md-5">
-    <div class="card shadow p-4">
-      <h4 class="text-center mb-3">Create Account</h4>
+  <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+
+    <div class="card shadow-sm p-4 rounded-4">
+      <h4 class="text-center mb-4 fw-semibold">
+        Create Account
+      </h4>
 
       <form method="POST">
-        <input name="username" class="form-control mb-2" placeholder="Username" required>
-        <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
-        <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
-        <button class="btn btn-success w-100">Register</button>
+        <div class="mb-3">
+          <input
+            name="username"
+            class="form-control"
+            placeholder="Username"
+            required
+          >
+        </div>
+
+        <div class="mb-3">
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="Email address"
+            required
+          >
+        </div>
+
+        <div class="mb-4">
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            placeholder="Password"
+            required
+          >
+        </div>
+
+        <button class="btn btn-success w-100">
+          Register
+        </button>
       </form>
 
-      <p class="text-center mt-3">
-        Already registered? <a href="{{ url_for('login') }}">Login</a>
+      <p class="text-center mt-3 mb-0 small">
+        Already registered?
+        <a href="{{ url_for('login') }}">Login</a>
       </p>
     </div>
+
   </div>
 </div>
 
 {% endblock %}
+

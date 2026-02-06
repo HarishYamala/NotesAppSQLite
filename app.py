@@ -1,35 +1,35 @@
 from flask import Flask, render_template, redirect, request, session, flash, url_for
 import sqlite3
 import os
-from werkzeug.security import generate_password_hash, check_password_hash
-from email.message import EmailMessage
-import smtplib
 import uuid
+import smtplib
+from email.message import EmailMessage
+from werkzeug.security import generate_password_hash, check_password_hash
 from config import SECRET_KEY, MAIL_CONFIG
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 
-# Database Connection Helper(SQLite) 
+# =========================
+# Database Connection
+# =========================
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def get_db_connection():
-    """
-    Creates and returns a SQLite database connection.
-    Uses absolute path so it works correctly on PythonAnywhere.
-    """
     conn = sqlite3.connect(os.path.join(BASE_DIR, "notes.db"))
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON;")
     return conn
 
+# =========================
+# Routes
+# =========================
 
 @app.route("/")
 def home():
-    if "user_id" in session:
-        return redirect(url_for("viewall"))
-    return redirect(url_for("login"))
+    return redirect(url_for("viewall")) if "user_id" in session else redirect(url_for("login"))
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -39,20 +39,16 @@ def register():
         password = generate_password_hash(request.form["password"])
 
         conn = get_db_connection()
-        cursor = conn.cursor()
-
         try:
-            cursor.execute(
+            conn.execute(
                 "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
                 (username, email, password)
             )
             conn.commit()
             flash("Registration successful", "success")
             return redirect(url_for("login"))
-
         except sqlite3.IntegrityError:
             flash("Username or email already exists", "danger")
-
         finally:
             conn.close()
 
@@ -88,6 +84,7 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
+
 @app.route("/viewall")
 def viewall():
     if "user_id" not in session:
@@ -96,7 +93,6 @@ def viewall():
     search = request.args.get("q", "")
 
     conn = get_db_connection()
-
     if search:
         notes = conn.execute("""
             SELECT * FROM notes
@@ -116,9 +112,7 @@ def viewall():
         """, (session["user_id"],)).fetchall()
 
     conn.close()
-
     return render_template("viewnotes.html", notes=notes, search=search)
-
 
 
 @app.route("/addnote", methods=["GET", "POST"])
@@ -144,7 +138,6 @@ def addnote():
     return render_template("addnote.html")
 
 
-
 @app.route("/view/<int:note_id>")
 def view(note_id):
     if "user_id" not in session:
@@ -157,7 +150,7 @@ def view(note_id):
     ).fetchone()
     conn.close()
 
-    if note is None:
+    if not note:
         flash("Note not found", "danger")
         return redirect(url_for("viewall"))
 
@@ -170,14 +163,12 @@ def update(note_id):
         return redirect(url_for("login"))
 
     conn = get_db_connection()
-
-    # Fetch note (for GET and security check)
     note = conn.execute(
         "SELECT * FROM notes WHERE id = ? AND user_id = ?",
         (note_id, session["user_id"])
     ).fetchone()
 
-    if note is None:
+    if not note:
         conn.close()
         flash("Note not found", "danger")
         return redirect(url_for("viewall"))
@@ -216,91 +207,68 @@ def delete(note_id):
     flash("Note deleted", "info")
     return redirect(url_for("viewall"))
 
+# =========================
+# Forgot Password
+# =========================
 
 @app.route("/forgot", methods=["GET", "POST"])
 def forgot():
     if request.method == "POST":
+
+        # 🔐 Safety check (prevents silent 500 errors)
+        if not MAIL_CONFIG["MAIL_PASSWORD"]:
+            raise RuntimeError(
+                "MAIL_PASSWORD not set. Add it in PythonAnywhere → Web → Environment Variables."
+            )
+
         email = request.form["email"]
-        token = str(uuid.uuid4())
 
         conn = get_db_connection()
-
-        # Step 1: Check if email exists (safe way)
         user = conn.execute(
             "SELECT id FROM users WHERE email = ?",
             (email,)
         ).fetchone()
 
-        # Step 2: Only update token if user exists
-        if user:
-            conn.execute(
-                "UPDATE users SET reset_token = ? WHERE email = ?",
-                (token, email)
-            )
-            conn.commit()
+        if not user:
+            conn.close()
+            flash("Email not found", "danger")
+            return redirect(url_for("forgot"))
 
+        token = str(uuid.uuid4())
+
+        conn.execute(
+            "UPDATE users SET reset_token = ? WHERE email = ?",
+            (token, email)
+        )
+        conn.commit()
         conn.close()
 
-        # Step 3: Always show same message (prevents email enumeration)
-        reset_link = f"{MAIL_CONFIG['BASE_URL']}/reset/{token}"
+        reset_link = url_for("reset", token=token, _external=True)
 
-        if user:
-            msg = EmailMessage()
-            msg["Subject"] = "Reset Password – Flask Notes"
-            msg["From"] = MAIL_CONFIG["MAIL_USERNAME"]
-            msg["To"] = email
+        msg = EmailMessage()
+        msg.set_content(f"Click the link to reset your password:\n\n{reset_link}")
+        msg["Subject"] = "Password Reset"
+        msg["From"] = MAIL_CONFIG["MAIL_USERNAME"]
+        msg["To"] = email
 
-            # Plain text
-            msg.set_content(f"""
-Hello,
-
-You requested to reset your password for Flask Notes.
-
-Reset your password using the link below:
-{reset_link}
-
-If you did not request this, please ignore this email.
-
-Regards,
-Flask Notes Team
-""")
-
-            # HTML email
-            msg.add_alternative(f"""
-            <html>
-              <body style="font-family: Arial, sans-serif;">
-                <h2>Reset Your Password</h2>
-                <p>Click the button below to reset your password:</p>
-                <a href="{reset_link}"
-                   style="
-                     background:#0d6efd;
-                     color:white;
-                     padding:12px 20px;
-                     text-decoration:none;
-                     border-radius:6px;
-                     display:inline-block;
-                   ">
-                   Reset Password
-                </a>
-                <p>If you didn’t request this, ignore this email.</p>
-              </body>
-            </html>
-            """, subtype="html")
-
-            server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+        with smtplib.SMTP_SSL(
+            MAIL_CONFIG["MAIL_SERVER"],
+            MAIL_CONFIG["MAIL_PORT"]
+        ) as server:
             server.login(
                 MAIL_CONFIG["MAIL_USERNAME"],
                 MAIL_CONFIG["MAIL_PASSWORD"]
             )
             server.send_message(msg)
-            server.quit()
 
-        flash("If the email exists, a reset link has been sent.", "info")
+        flash("Password reset link sent to your email", "success")
         return redirect(url_for("login"))
 
     return render_template("forgot.html")
 
-
+# =========================
+# Reset Password
+# =========================
 
 @app.route("/reset/<token>", methods=["GET", "POST"])
 def reset(token):
@@ -339,15 +307,22 @@ def reset(token):
     conn.close()
     return render_template("reset.html", token=token)
 
-
+# =========================
+# Static Pages
+# =========================
 
 @app.route("/about")
 def about():
     return render_template("about.html")
 
+
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+
+# =========================
+# Local Run (ignored by PythonAnywhere)
+# =========================
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
